@@ -1,0 +1,6 @@
+@DesiMart_HostAddress = http://localhost:5012
+
+GET {{DesiMart_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
