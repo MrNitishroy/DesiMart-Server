@@ -1,43 +1,124 @@
-﻿using DesiMart.Models;
+﻿using DesiMart.DbContext;
+using DesiMart.Models;
 using DesiMart.Services.Interfaces;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DesiMart.Services
 {
     public class ReviewService : IReview
     {
-        public Task<ResponseModel> AddReview(Review review)
+        private readonly IMongoCollection<Review> _reviewCollection;
+
+        public ReviewService(MongoDbContext mongoDbContext)
         {
-            throw new NotImplementedException();
+            _reviewCollection = mongoDbContext.ReviewDb;
         }
 
-        public Task DeleteReview(string id)
+        public async Task<ResponseModel> AddReview(Review review)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _reviewCollection.InsertOneAsync(review);
+                return new ResponseModel("Review added successfully", true, review);
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return new ResponseModel($"Error adding review: {ex.Message}", false, null);
+            }
         }
 
-        public Task<Review> GetReviewById(string id)
+        public async Task<ResponseModel> DeleteReview(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var deleteResult = await _reviewCollection.DeleteOneAsync(r => r.Id == id);
+                if (deleteResult.DeletedCount == 0)
+                {
+                    return new ResponseModel("Review not found",false,null);
+                }
+                return new ResponseModel("Review deleted successfully", true, null);
+            }
+            catch (Exception ex)
+            {
+                return    new ResponseModel(ex.Message, false, null);
+            }
         }
 
-        public Task<List<Review>> GetReviews()
+        public async Task<Review> GetReviewById(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _reviewCollection.Find(r => r.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error fetching review: {ex.Message}");
+            }
         }
 
-        public Task<List<Review>> GetReviewsByCustomerId(string customerId)
+        public async Task<List<Review>> GetReviews()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _reviewCollection.Find(_ => true).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error fetching reviews: {ex.Message}");
+            }
         }
 
-        public Task<List<Review>> GetReviewsByProductId(string productId)
+        public async Task<List<Review>> GetReviewsByCustomerId(string customerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _reviewCollection.Find(r => r.UserId == customerId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error fetching reviews by customer ID: {ex.Message}");
+            }
         }
 
-        public Task<ResponseModel> UpdateReview(Review review, string id)
+        public async Task<List<Review>> GetReviewsByProductId(string productId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _reviewCollection.Find(r => r.ProductId == productId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error fetching reviews by product ID: {ex.Message}");
+            }
+        }
+
+        public async Task<ResponseModel> UpdateReview(Review review, string id)
+        {
+            try
+            {
+                var updateResult = await _reviewCollection.ReplaceOneAsync(r => r.Id == id, review);
+                if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
+                {
+                    return new ResponseModel("Review updated successfully", true, review);
+                }
+                else
+                {
+                    return new ResponseModel("Review not found or no changes made", false, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return new ResponseModel($"Error updating review: {ex.Message}", false, null);
+            }
         }
     }
 }

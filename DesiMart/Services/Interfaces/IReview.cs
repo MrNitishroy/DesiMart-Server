@@ -6,7 +6,7 @@ namespace DesiMart.Services.Interfaces
     {
         Task<ResponseModel> AddReview(Review review);
         Task<ResponseModel> UpdateReview(Review review, string id);
-        Task DeleteReview(string id);
+        Task<ResponseModel> DeleteReview(string id);
         Task<Review> GetReviewById(string id);
         Task<List<Review>> GetReviewsByProductId(string productId);
         Task<List<Review>> GetReviewsByCustomerId(string customerId);
