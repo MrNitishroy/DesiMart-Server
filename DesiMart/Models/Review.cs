@@ -1,8 +1,13 @@
-﻿namespace DesiMart.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace DesiMart.Models
 {
     public class Review
     {
-        public string Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
         public string UserId { get; set; }
         public string Comment { get; set; }
         public decimal Rating { get; set; }

@@ -49,13 +49,13 @@ namespace DesiMart.Services
             await _collection.DeleteOneAsync(id);
         }
 
-       // public async Task<List<Product>> GetProducts(int pageNumber, int pageSize)
-       // {
-       //     return await _collection.Find(a => true)
-       //                             .Skip((pageNumber - 1) * pageSize)
-         //                           .Limit(pageSize)
-           //                         .ToListAsync();
-       // }
+        // public async Task<List<Product>> GetProducts(int pageNumber, int pageSize)
+        // {
+        //     return await _collection.Find(a => true)
+        //                             .Skip((pageNumber - 1) * pageSize)
+        //                           .Limit(pageSize)
+        //                         .ToListAsync();
+        // }
         public async Task<List<Product>> SearchProducts(string category = null, decimal? minPrice = null, decimal? maxPrice = null)
         {
             var filterBuilder = Builders<Product>.Filter;
@@ -97,12 +97,12 @@ namespace DesiMart.Services
 
         public async Task<List<Product>> GetProducts()
         {
-            return await _collection.Find(a=>true).ToListAsync();
+            return await _collection.Find(a => true).ToListAsync();
         }
 
         public async Task<Product> GetProductById(string id)
         {
-            return await _collection.Find(a =>a.Id == id).FirstOrDefaultAsync();
+            return await _collection.Find(a => a.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<ResponseModel> UpdateProduct(UpdateProduct updateProduct, string id)
@@ -215,6 +215,34 @@ namespace DesiMart.Services
         }
 
 
+        public async Task<ResponseModel> AddReview(string productId, Review review)
+        {
+            try
+            {
+                var product = await _collection.Find(a => a.Id == productId).FirstOrDefaultAsync();
+                if (product == null)
+                {
+                    return new ResponseModel("Product not found", false, null);
+                }
+
+                 var updateDefinition = Builders<Product>.Update.Push(p => p.Reviews, review);
+                var updateResult = await _collection.UpdateOneAsync(p => p.Id == productId, updateDefinition);
+
+                if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
+                {
+                    return new ResponseModel("Review added successfully", true, review);
+                }
+                else
+                {
+                    return new ResponseModel("Error adding review", false, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if logging is set up
+                return new ResponseModel($"Error adding review: {ex.Message}", false, null);
+            }
+        }
 
     }
 }

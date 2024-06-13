@@ -11,6 +11,7 @@ namespace DesiMart.Services.Interfaces
         Task<Product> GetProductById(string id);
         Task<List<Product>> GetProductsByName(string name);
         Task<List<Product>> GetProducts();
+        Task<ResponseModel> AddReview(string productId, Review review); 
 
       
 
