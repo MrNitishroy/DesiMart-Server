@@ -2,9 +2,9 @@
 {
     public class MongoDbConfigs
     {
-        public const string Option = "MongoDbConfigs";
         public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
-        public bool EnableCommandTracing { get; set; }
+        public string Database { get; set; }
+        public string ProductsCollection { get; set; }
+        public string CollegeCollection { get; set; }
     }
 }
