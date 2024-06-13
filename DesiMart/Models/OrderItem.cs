@@ -1,8 +1,13 @@
-﻿namespace DesiMart.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace DesiMart.Models
 {
     public class OrderItem
     {
-        public int Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
         public int OrderId { get; set; }
         public Product Product { get; set; }
         public int Quantity { get; set; }

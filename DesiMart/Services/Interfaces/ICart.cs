@@ -8,7 +8,8 @@ namespace DesiMart.Services.Interfaces
         Task<ResponseModel> UpdateCart(Cart cart, string id);
         Task DeleteCart(string id);
         Task<Cart> GetCartById(string id);
-        Task<List<Cart>> GetCartByCustomerId(string customerId);
+        Task<Cart> GetCartByCustomerId(string customerId);
         Task<List<Cart>> GetCart();
+        Task<ResponseModel> UpdateCartItems(string cartId, CartItem cartItems);
     }
 }
