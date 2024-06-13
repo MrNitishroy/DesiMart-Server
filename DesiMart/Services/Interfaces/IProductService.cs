@@ -12,5 +12,7 @@ namespace DesiMart.Services.Interfaces
         Task<List<Product>> GetProductsByName(string name);
         Task<List<Product>> GetProducts();
 
+      
+
     }
 }

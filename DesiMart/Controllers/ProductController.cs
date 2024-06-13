@@ -119,6 +119,25 @@ namespace DesiMart.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// Delete Product 
+        /// </summary>
+        /// <param name="product">Delete Product</param>
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteProduct(string id)
+        {
+            try
+            {
+                await productService.DeleteProduct(id);
+                return Ok("Product Deleted");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 
 

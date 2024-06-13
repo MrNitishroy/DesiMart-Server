@@ -9,38 +9,37 @@ namespace DesiMart.DbContext
     public class MongoDbContext
     {
         private readonly IMongoCollection<Product> _product;
+        private readonly IMongoCollection<Customer> _customer;
+        private readonly IMongoCollection<Order> _order;
+        private readonly IMongoCollection<OrderItem> _orderItem;
+        private readonly IMongoCollection<Review> _review;
         public MongoDbContext(IOptions<MongoDbConfigs> mongoDBSettings)
         {
             try
             {
-                // Extract the connection settings
+              
                 var settings = mongoDBSettings.Value;
-
-                // Initialize MongoClient settings from the connection string
                 MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(settings.ConnectionString);
-
-                // Create MongoClient instance
                 MongoClient client = new MongoClient(clientSettings);
-
-                // Get the specified database
                 IMongoDatabase database = client.GetDatabase(settings.Database);
-
-                // Get the collection for Product
                 _product = database.GetCollection<Product>(settings.ProductsCollection);
-
-                // Optional: Log successful connection
+                _customer = database.GetCollection<Customer>(settings.CustomerCollection);
+                _review = database.GetCollection<Review>(settings.ReviewCollection);
+                _order = database.GetCollection<Order>(settings.OrderCollection);
                 Console.WriteLine("MongoDB connection established successfully.");
             }
             catch (Exception ex)
             {
-                // Handle potential errors and optionally log them
                 Console.Error.WriteLine($"Error initializing MongoDbContext: {ex.Message}");
-                throw; // Re-throw the exception after logging
+                throw; 
             }
         }
 
         // Exposes the Product collection
         public IMongoCollection<Product> ProductDb => _product;
+        public IMongoCollection<Customer> CustomerDb => _customer;
+        public IMongoCollection<Review> ReviewDb => _review;
+        public IMongoCollection<Order> OrderDb => _order;
     }
 }
 
