@@ -10,5 +10,6 @@
         public string ReviewCollection { get; set; }
         public string OrderItemCollection { get; set; }
         public string CategoryCollection { get; set; }
+        public string CartCollection { get; set; }
     }
 }

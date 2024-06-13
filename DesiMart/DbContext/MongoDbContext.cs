@@ -13,6 +13,7 @@ namespace DesiMart.DbContext
         private readonly IMongoCollection<Order> _order;
         private readonly IMongoCollection<OrderItem> _orderItem;
         private readonly IMongoCollection<Review> _review;
+        private readonly IMongoCollection<Cart> _cart;
         public MongoDbContext(IOptions<MongoDbConfigs> mongoDBSettings)
         {
             try
@@ -26,6 +27,7 @@ namespace DesiMart.DbContext
                 _customer = database.GetCollection<Customer>(settings.CustomerCollection);
                 _review = database.GetCollection<Review>(settings.ReviewCollection);
                 _order = database.GetCollection<Order>(settings.OrderCollection);
+                _cart = database.GetCollection<Cart>(settings.CartCollection);
                 Console.WriteLine("MongoDB connection established successfully.");
             }
             catch (Exception ex)
@@ -40,6 +42,7 @@ namespace DesiMart.DbContext
         public IMongoCollection<Customer> CustomerDb => _customer;
         public IMongoCollection<Review> ReviewDb => _review;
         public IMongoCollection<Order> OrderDb => _order;
+        public IMongoCollection<Cart> CartDb => _cart;
     }
 }
 
